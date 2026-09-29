@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Alhamd Chit Payment Tracker</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* =========================================
+           GLOBAL
+        ========================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f4f6f9;
+            color: #333;
+        }
+
+
+        /* =========================================
+           MAIN CONTAINER
+        ========================================= */
+
+        .main-container {
+            max-width: 900px;
+            margin: 35px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+
+        /* =========================================
+           HEADER
+        ========================================= */
+
+        .tracker-header {
+            position: relative;
+
+            padding: 25px 25px 23px;
+            margin-bottom: 28px;
+
+            background: linear-gradient(
+                135deg,
+                #ffffff,
+                #f7faf8
+            );
+
+            border: 1px solid #e5ebe7;
+            border-radius: 16px;
+
+            overflow: hidden;
+        }
+
+        .tracker-header::before {
+            content: "";
+
+            position: absolute;
+            left: 0;
+            top: 0;
+
+            width: 5px;
+            height: 100%;
+
+            background: linear-gradient(
+                180deg,
+                #198754,
+                #20c997
+            );
+        }
+
+        .tracker-title {
+            font-size: 28px;
+            font-weight: 800;
+
+            color: #172033;
+
+            line-height: 1.3;
+
+            margin-bottom: 7px;
+
+            letter-spacing: -0.5px;
+        }
+
+        .tracker-month {
+            font-size: 14px;
+
+            color: #737b87;
+
+            font-weight: 500;
+
+            margin: 0;
+        }
+
+        .tracker-month span {
+            color: #198754;
+            font-weight: 700;
+        }
+
+        .title-line {
+            width: 50px;
+            height: 4px;
+
+            margin-top: 15px;
+
+            border-radius: 20px;
+
+            background: linear-gradient(
+                90deg,
+                #198754,
+                #20c997
+            );
+        }
+
+
+        /* =========================================
+           SUMMARY CARDS
+        ========================================= */
+
+        .summary-card {
+            background: #f8f9fa;
+
+            border: 1px solid #eaeaea;
+
+            border-radius: 12px;
+
+            padding: 18px 15px;
+
+            text-align: center;
+
+            transition: 0.25s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .summary-card h5 {
+            font-size: 0.85rem;
+
+            color: #666;
+
+            margin-bottom: 7px;
+
+            font-weight: 600;
+        }
+
+        .summary-card h3 {
+            font-size: 1.4rem;
+
+            font-weight: 700;
+
+            margin-bottom: 0;
+        }
+
+
+        /* =========================================
+           TABLE
+        ========================================= */
+
+        .table-container {
+            background: #ffffff;
+
+            border: 1px solid #eaeaea;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            margin-bottom: 30px;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            background: #f8f9fa;
+
+            color: #555;
+
+            font-weight: 600;
+
+            padding: 15px;
+
+            border-bottom: 2px solid #eaeaea;
+
+            white-space: nowrap;
+        }
+
+        .table td {
+            padding: 15px;
+
+            vertical-align: middle;
+
+            font-size: 0.95rem;
+
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tbody tr:hover {
+            background: #fafcfb;
+        }
+
+
+        /* =========================================
+           PAYMENT STATUS
+           
+           IMPORTANT:
+           There is NO select/dropdown.
+           Status can only be changed in HTML.
+        ========================================= */
+
+        .payment-status {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 7px 14px;
+
+            border-radius: 20px;
+
+            font-size: 0.82rem;
+
+            font-weight: 700;
+
+            user-select: none;
+
+            cursor: default;
+
+            white-space: nowrap;
+        }
+
+        .payment-status.paid {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .payment-status.unpaid {
+            background: #fff8e1;
+            color: #f57f17;
+        }
+
+        .payment-status i {
+            font-size: 11px;
+        }
+
+
+        /* =========================================
+           RULES
+        ========================================= */
+
+        .rules-title {
+            font-weight: 700;
+
+            color: #222;
+        }
+
+        .rule-card {
+            background: #fafbfc;
+
+            border: 1px solid #eaeaea;
+
+            border-radius: 12px;
+
+            padding: 15px 20px;
+
+            margin-bottom: 12px;
+
+            display: flex;
+
+            align-items: flex-start;
+
+            transition: 0.2s ease;
+        }
+
+        .rule-card:hover {
+            background: #ffffff;
+
+            transform: translateX(3px);
+
+            box-shadow:
+                0 5px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        .rule-number {
+            background: #e8f5e9;
+
+            color: #2e7d32;
+
+            width: 32px;
+            height: 32px;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: 700;
+
+            font-size: 13px;
+
+            margin-right: 15px;
+
+            flex-shrink: 0;
+        }
+
+        .rule-number.special {
+            background: #fff8e1;
+
+            color: #f57f17;
+        }
+
+
+        /* =========================================
+           PDF BUTTON
+        ========================================= */
+
+        .btn-pdf {
+            background: #111;
+
+            color: #fff;
+
+            font-weight: 600;
+
+            padding: 10px 20px;
+
+            border-radius: 10px;
+
+            border: none;
+
+            transition: 0.2s;
+        }
+
+        .btn-pdf:hover {
+            background: #333;
+
+            color: #fff;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .tracker-footer {
+            text-align: center;
+
+            color: #888;
+
+            font-size: 12px;
+
+            border-top: 1px solid #eeeeee;
+
+            padding-top: 18px;
+
+            margin-top: 25px;
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 600px) {
+
+            .main-container {
+                margin: 15px 10px;
+
+                padding: 18px;
+
+                border-radius: 15px;
+            }
+
+            .tracker-header {
+                padding: 20px 18px;
+
+                margin-bottom: 20px;
+            }
+
+            .tracker-title {
+                font-size: 22px;
+
+                letter-spacing: -0.3px;
+            }
+
+            .tracker-month {
+                font-size: 13px;
+            }
+
+            .title-line {
+                width: 42px;
+
+                height: 3px;
+            }
+
+            .summary-card {
+                padding: 15px 10px;
+            }
+
+            .summary-card h5 {
+                font-size: 12px;
+            }
+
+            .summary-card h3 {
+                font-size: 1.15rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 12px 10px;
+
+                font-size: 13px;
+            }
+
+            .payment-status {
+                padding: 6px 10px;
+
+                font-size: 11px;
+            }
+
+            .payment-status i {
+                font-size: 9px;
+            }
+
+            .rule-card {
+                padding: 14px;
+            }
+
+            .rule-number {
+                width: 30px;
+
+                height: 30px;
+
+                margin-right: 10px;
+            }
+
+            .btn-pdf {
+                width: 100%;
+            }
+        }
+
+
+        /* =========================================
+           PRINT / PDF
+        ========================================= */
+
+        @media print {
+
+            body {
+                background: #ffffff;
+            }
+
+            .btn-pdf {
+                display: none !important;
+            }
+
+            .main-container {
+                box-shadow: none;
+
+                margin: 0;
+
+                padding: 0;
+
+                max-width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+    <div
+        class="main-container"
+        id="printableArea"
+    >
+
+
+        <!-- =====================================
+             HEADER
+        ====================================== -->
+
+        <div class="tracker-header">
+
+            <h1 class="tracker-title">
+                Alhamd Chit - ₹10000
+            </h1>
+
+            <p class="tracker-month">
+
+                Monthly Payment Status:
+
+                <span>
+                    Oct 2026
+                </span>
+
+            </p>
+
+            <div class="title-line"></div>
+
+        </div>
+
+        <!-- =====================================
+             PAYMENT TABLE
+        ====================================== -->
+
+        <div class="table-container">
+
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Member / Token
+                            </th>
+
+                            <th>
+                                Monthly Installment
+                            </th>
+
+                            <th>
+                                Status (Oct 2026)
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <!-- MEMBER 01 -->
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                Sakheer PA
+                            </td>
+
+                            <td>
+                                ₹ 1,000
+                            </td>
+
+                            <td>
+
+                                <!-- CHANGE STATUS HERE -->
+                                <span class="payment-status paid">
+
+                                    <i class="fa-solid fa-check"></i>
+
+                                    Paid
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- MEMBER 02 -->
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                Sakheer PA
+                            </td>
+
+                            <td>
+                                ₹ 1,000
+                            </td>
+
+                            <td>
+
+                                <!-- CHANGE STATUS HERE -->
+                                <span class="payment-status paid">
+
+                                    <i class="fa-solid fa-check"></i>
+
+                                    Paid
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- MEMBER 03 -->
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                Token Number (333)
+                            </td>
+
+                            <td>
+                                ₹ 1,000
+                            </td>
+
+                            <td>
+
+                                <!-- CHANGE STATUS HERE -->
+                                <span class="payment-status unpaid">
+
+                                    <i class="fa-solid fa-clock"></i>
+
+                                    Unpaid
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- MEMBER 04 -->
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                Anas Moulavi
+                            </td>
+
+                            <td>
+                                ₹ 1,000
+                            </td>
+
+                            <td>
+
+                                <!-- CHANGE STATUS HERE -->
+                                <span class="payment-status unpaid">
+
+                                    <i class="fa-solid fa-clock"></i>
+
+                                    Unpaid
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- MEMBER 05 -->
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                Irfan Abrari
+                            </td>
+
+                            <td>
+                                ₹ 1,000
+                            </td>
+
+                            <td>
+
+                                <!-- CHANGE STATUS HERE -->
+                                <span class="payment-status paid">
+
+                                    <i class="fa-solid fa-check"></i>
+
+                                    Paid
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- MEMBER 06 -->
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                Althaf Abrari
+                            </td>
+
+                            <td>
+                                ₹ 1,000
+                            </td>
+
+                            <td>
+
+                                <!-- CHANGE STATUS HERE -->
+                                <span class="payment-status unpaid">
+
+                                    <i class="fa-solid fa-clock"></i>
+
+                                    Unpaid
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- MEMBER 07 -->
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                Nuaim Abrari
+                            </td>
+
+                            <td>
+                                ₹ 1,000
+                            </td>
+
+                            <td>
+
+                                <!-- CHANGE STATUS HERE -->
+                                <span class="payment-status unpaid">
+
+                                    <i class="fa-solid fa-clock"></i>
+
+                                    Unpaid
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- MEMBER 08 -->
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                Token Number (812)
+                            </td>
+
+                            <td>
+                                ₹ 1,000
+                            </td>
+
+                            <td>
+
+                                <!-- CHANGE STATUS HERE -->
+                                <span class="payment-status unpaid">
+
+                                    <i class="fa-solid fa-clock"></i>
+
+                                    Unpaid
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- MEMBER 09 -->
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                Haleel Rahman Abrari
+                            </td>
+
+                            <td>
+                                ₹ 1,000
+                            </td>
+
+                            <td>
+
+                                <!-- CHANGE STATUS HERE -->
+                                <span class="payment-status unpaid">
+
+                                    <i class="fa-solid fa-clock"></i>
+
+                                    Unpaid
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- MEMBER 10 -->
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                TOKEN Number (956)
+                            </td>
+
+                            <td>
+                                ₹ 1,000
+                            </td>
+
+                            <td>
+
+                                <!-- CHANGE STATUS HERE -->
+                                <span class="payment-status paid">
+
+                                    <i class="fa-solid fa-check"></i>
+
+                                    Paid
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             PDF BUTTON
+        ====================================== -->
+
+        <div class="d-flex justify-content-end mb-4">
+
+            <button
+                class="btn btn-pdf"
+                onclick="window.print()"
+            >
+
+                <i class="fa-solid fa-file-pdf me-2"></i>
+
+                Download PDF
+
+            </button>
+
+        </div>
+
+
+        <!-- =====================================
+             FOOTER
+        ====================================== -->
+
+        <div class="tracker-footer">
+
+            © 2026 Al-Hamd Chit · All Rights Reserved
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     JAVASCRIPT
+     
+     Reads Paid / Unpaid from the HTML.
+     There is NO user control for changing status.
+========================================= -->
+
+<script>
+
+    function updateCalculation() {
+
+        /* Find all payment statuses */
+
+        const paidMembers =
+            document.querySelectorAll(
+                '.payment-status.paid'
+            );
+
+        const unpaidMembers =
+            document.querySelectorAll(
+                '.payment-status.unpaid'
+            );
+
+
+        /* Count members */
+
+        const totalMembers =
+            paidMembers.length +
+            unpaidMembers.length;
+
+
+        /* Monthly installment */
+
+        const installment = 1000;
+
+
+        /* Calculate totals */
+
+        const totalGot =
+            paidMembers.length * installment;
+
+
+        const totalRemaining =
+            unpaidMembers.length * installment;
+
+
+        /* Update dashboard */
+
+        document.getElementById(
+            'totalMembers'
+        ).innerText = totalMembers;
+
+
+        document.getElementById(
+            'totalGot'
+        ).innerText =
+            '₹ ' + totalGot.toLocaleString();
+
+
+        document.getElementById(
+            'totalRemaining'
+        ).innerText =
+            '₹ ' + totalRemaining.toLocaleString();
+
+    }
+
+
+    /* Run calculation when page loads */
+
+    updateCalculation();
+
+</script>
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+</body>
+</html>
+```
