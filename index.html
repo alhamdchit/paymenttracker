@@ -549,6 +549,34 @@
         </div>
 
         <!-- =====================================
+             SUMMARY
+        ====================================== -->
+
+        <div class="row g-3 mb-4">
+            <div class="col-4">
+                <div class="summary-card">
+                    <h5>Total Members</h5>
+                    <h3 id="totalMembers">0</h3>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="summary-card">
+                    <h5>Paid</h5>
+                    <h3 id="totalPaid">0</h3>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="summary-card">
+                    <h5>Remaining</h5>
+                    <h3 id="totalRemaining">₹ 0</h3>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- =====================================
              PAYMENT TABLE
         ====================================== -->
 
@@ -654,11 +682,8 @@
 
                                 <!-- CHANGE STATUS HERE -->
                                 <span class="payment-status paid">
-
-                                    <i class="fa-solid fa-clock"></i>
-
-                                    paid
-
+                                    <i class="fa-solid fa-check"></i>
+                                    Paid
                                 </span>
 
                             </td>
@@ -682,11 +707,8 @@
 
                                 <!-- CHANGE STATUS HERE -->
                                 <span class="payment-status paid">
-
-                                    <i class="fa-solid fa-clock"></i>
-
-                                    paid
-
+                                    <i class="fa-solid fa-check"></i>
+                                    Paid
                                 </span>
 
                             </td>
@@ -736,15 +758,11 @@
 
                             <td>
 
-                                <!-- CHANGE STATUS HERE -->
+                                <!-- CHANGE STATUS ONLY IN HTML -->
                                 <span class="payment-status unpaid">
-
                                     <i class="fa-solid fa-clock"></i>
-
                                     Unpaid
-
                                 </span>
-
                             </td>
 
                         </tr>
@@ -766,11 +784,8 @@
 
                                 <!-- CHANGE STATUS HERE -->
                                 <span class="payment-status paid">
-
-                                    <i class="fa-solid fa-clock"></i>
-
-                                    paid
-
+                                    <i class="fa-solid fa-check"></i>
+                                    Paid
                                 </span>
 
                             </td>
@@ -794,11 +809,8 @@
 
                                 <!-- CHANGE STATUS HERE -->
                                 <span class="payment-status paid">
-
-                                    <i class="fa-solid fa-clock"></i>
-
-                                    paid
-
+                                    <i class="fa-solid fa-check"></i>
+                                    Paid
                                 </span>
 
                             </td>
@@ -820,15 +832,11 @@
 
                             <td>
 
-                                <!-- CHANGE STATUS HERE -->
+                                <!-- CHANGE STATUS ONLY IN HTML -->
                                 <span class="payment-status unpaid">
-
                                     <i class="fa-solid fa-clock"></i>
-
                                     Unpaid
-
                                 </span>
-
                             </td>
 
                         </tr>
@@ -918,59 +926,34 @@
 
     function updateCalculation() {
 
-        /* Find all payment statuses */
+        // Payment status is controlled ONLY by the HTML.
+        const paidMembers = document.querySelectorAll(
+            '.payment-status.paid'
+        );
 
-        const paidMembers =
-            document.querySelectorAll(
-                '.payment-status.paid'
-            );
-
-        const unpaidMembers =
-            document.querySelectorAll(
-                '.payment-status.unpaid'
-            );
-
-
-        /* Count members */
+        const unpaidMembers = document.querySelectorAll(
+            '.payment-status.unpaid'
+        );
 
         const totalMembers =
-            paidMembers.length +
-            unpaidMembers.length;
-
-
-        /* Monthly installment */
+            paidMembers.length + unpaidMembers.length;
 
         const installment = 1000;
 
-
-        /* Calculate totals */
-
-        const totalGot =
+        const totalPaid =
             paidMembers.length * installment;
-
 
         const totalRemaining =
             unpaidMembers.length * installment;
 
+        document.getElementById('totalMembers').innerText =
+            totalMembers;
 
-        /* Update dashboard */
+        document.getElementById('totalPaid').innerText =
+            '₹ ' + totalPaid.toLocaleString();
 
-        document.getElementById(
-            'totalMembers'
-        ).innerText = totalMembers;
-
-
-        document.getElementById(
-            'totalGot'
-        ).innerText =
-            '₹ ' + totalGot.toLocaleString();
-
-
-        document.getElementById(
-            'totalRemaining'
-        ).innerText =
+        document.getElementById('totalRemaining').innerText =
             '₹ ' + totalRemaining.toLocaleString();
-
     }
 
 
